@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="KinoGen synthesizes customizable humanoid loco-manipulation references through kinematically grounded video generation.">
+  <meta name="keywords" content="humanoid robotics, loco-manipulation, video generation, motion reconstruction, whole-body control">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
+  <title>KinoGen: Customizable Humanoid Loco-Manipulation References via Kinematically Grounded Video Generation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans:400,500,700|Noto+Sans:400,500,600,700|Castoro" rel="stylesheet">
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script defer src="./static/js/index.js"></script>
+</head>
+<body>
+  <header class="hero publication-header" id="top">
+    <div class="hero-body">
+      <div class="page-shell has-text-centered">
+        <h1 class="title is-1 publication-title">
+          KinoGen: Customizable Humanoid Loco-Manipulation References
+          <span>via Kinematically Grounded Video Generation</span>
+        </h1>
+        <p class="conference-label">Anonymous ICRA Submission</p>
+        <div class="publication-links" aria-label="Project resources">
+          <a class="button is-normal is-rounded is-dark" href="full-paper.pdf" target="_blank" rel="noopener">
+            <span class="icon" aria-hidden="true"><i class="fas fa-file-pdf"></i></span><span>Paper</span>
+          </a>
+          <a class="button is-normal is-rounded is-dark" href="#video">
+            <span class="icon" aria-hidden="true"><i class="fas fa-play"></i></span><span>Video</span>
+          </a>
+          <span class="button is-normal is-rounded resource-pending" aria-disabled="true">
+            <span class="icon" aria-hidden="true"><i class="fab fa-github"></i></span><span>Code coming soon</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="section main-content">
+      <div class="page-shell">
+        <section class="my-block video-block" id="video">
+          <figure class="video-feature">
+            <div class="video-feature__frame">
+              <video controls playsinline preload="metadata" aria-label="KinoGen project overview video">
+                <source src="videos/compressed-kinogen-vid-sub-v14.mp4" type="video/mp4">
+              </video>
+            </div>
+          </figure>
+        </section>
+
+        <section class="my-block abstract-block" id="abstract">
+          <div class="narrow-copy">
+            <h2 class="title is-3 section-title--centered">Abstract</h2>
+            <div class="content">
+              <p>
+                We present KinoGen, a framework that synthesizes customizable humanoid loco-manipulation
+                references through kinematically grounded video generation. KinoGen conditions a pretrained
+                video generator on calibrated renders of the target robot and object, then fits the same models
+                to the generated two-view video. The resulting reference lies in the robot configuration space
+                without a human body proxy or retargeting. Users can prescribe a goal object pose, regenerate
+                the motion around an edited keyframe, and recover a reference that satisfies that pose exactly.
+                Across eight tasks, KinoGen reduces penetration and foot skating, preserves over 90% of annotated
+                contacts, and supports tracking-policy deployment on a Unitree G1 with dexterous hands.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section class="my-block teaser-block" id="overview">
+          <figure>
+            <div class="teaser-media">
+              <video class="teaser-image" autoplay muted loop playsinline preload="auto" aria-label="Animated KinoGen overview from a task instance and generated video through reconstruction, keyframe editing, policy training, and deployment">
+                <source src="images/teaser-horizontal-revised.mp4" type="video/mp4">
+              </video>
+            </div>
+            <figcaption class="subtitle teaser-caption">
+              <strong>KinoGen</strong> turns synchronized robot videos into whole-body robot-object references
+              and supports keyframe-based correction for prescribed task goals.
+            </figcaption>
+          </figure>
+        </section>
+
+        <section class="my-block" id="method">
+          <div class="section-heading">
+            <h2 class="title is-3">Method</h2>
+            <p>
+              KinoGen synthesizes customizable whole-body, hand, and object motion references for a target humanoid and its scene.
+              Generated videos depict the desired interaction but do not directly provide the 3D trajectories required for tracking or guarantee a prescribed object pose.
+              KinoGen addresses these requirements by coupling video generation with simulator rendering and reconstruction through three key design choices:
+            </p>
+            <ul class="method-highlights">
+              <li>KinoGen uses the same robot and object models for generation and reconstruction, recovering complete references in the target configuration spaces without human-body reconstruction or retargeting.</li>
+              <li>KinoGen combines calibrated multi-view evidence with motion priors to reduce depth ambiguity and constrain motion that image matching alone cannot resolve.</li>
+              <li>KinoGen regenerates motion around edited simulator keyframes and enforces them during reconstruction, using generation to adapt the surrounding behavior while satisfying the prescribed poses exactly.</li>
+            </ul>
+          </div>
+          <figure class="method-figure">
+            <div class="method-interactive">
+              <video class="method-video" width="2160" height="532" muted loop playsinline preload="metadata" poster="images/method8-web-revised-poster.png" data-autoplay aria-label="Animated KinoGen method: grounded multi-view video generation, robot-object interaction reconstruction, and keyframe-based reference correction">
+                <source src="images/method8-web-revised.mp4" type="video/mp4">
+                Your browser does not support embedded video.
+              </video>
+              <div class="method-hotspots" aria-label="KinoGen method stages">
+                <button class="method-hotspot" type="button" aria-label="Explain video generation with kinematic grounding" aria-controls="method-stage-description" data-title="Grounded multi-view generation" data-description="conditions the video model on calibrated renders of the target robot, object, and scene. The two synchronized views describe the same interaction and reduce monocular depth ambiguity."></button>
+                <button class="method-hotspot" type="button" aria-label="Explain robot-object interaction reconstruction" aria-controls="method-stage-description" data-title="Robot-object reconstruction" data-description="fits the target models to multi-view evidence, with motion priors constraining the solution. This recovers body, hand, and object trajectories directly in the target configuration spaces without human body proxy or retargeting."></button>
+                <button class="method-hotspot" type="button" aria-label="Explain keyframe-based reference correction" aria-controls="method-stage-description" data-title="Keyframe-based correction" data-description="regenerates motion around an edited simulator keyframe and enforces that keyframe during reconstruction, so the reference satisfies the prescribed configuration exactly."></button>
+              </div>
+            </div>
+            <figcaption class="method-stage-description" id="method-stage-description" aria-live="polite">
+              <strong hidden></strong>
+              <span>KinoGen synthesizes and customizes humanoid loco-manipulation references for the target embodiment.</span>
+            </figcaption>
+          </figure>
+        </section>
+
+        <section class="my-block" id="generation-to-reference">
+          <div class="section-heading">
+            <h2 class="title is-3">Kinematic Grounding</h2>
+            <p>Our key insight is that a pretrained video generator and a physics simulator can be coupled through rendering and reconstruction using the same robot and object models. The paired videos illustrate the reconstruction side of this coupling, showing the generated interaction alongside its recovered robot–object reference.</p>
+          </div>
+          <div class="grounding-flow" aria-label="Generated interaction and corresponding reconstructed reference">
+            <article class="flow-card">
+              <div class="flow-card__video">
+                <video controls muted loop playsinline preload="metadata" data-autoplay aria-label="Generated two-view video of a robot placing a bottle on a table">
+                  <source src="videos/generated/bottle2_table1.mp4" type="video/mp4">
+                </video>
+              </div>
+              <div class="flow-card__body"><h3>Generated multi-view video</h3><p>Two synchronized views depict the prompted interaction.</p></div>
+            </article>
+            <article class="flow-card">
+              <div class="flow-card__video">
+                <video controls muted loop playsinline preload="metadata" data-autoplay aria-label="Reconstructed robot-object reference for placing a bottle on a table"><source src="videos/reconstruction/bottle2_table1.mp4" type="video/mp4"></video>
+              </div>
+              <div class="flow-card__body"><h3>Reconstructed robot–object reference</h3><p>KinoGen recovers the corresponding body, hand, and object trajectories in simulator coordinates.</p></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="my-block" id="references">
+          <div class="section-heading">
+            <h2 class="title is-3">Diverse Generated Reference</h2>
+            <p>Qualitative references at 1&times; speed span lifting, placement, sitting, and other environmental interaction. These examples show the diversity and quality of the generated motion references.</p>
+          </div>
+          <div class="task-grid">
+            <article class="task-card"><div class="task-card__media"><video controls muted loop playsinline preload="metadata" data-autoplay aria-label="Dumbbell pickup reconstructed reference"><source src="videos/reconstruction/dumbbell.mp4" type="video/mp4"></video></div><div class="task-card__body"><h3>Pick Up the Dumbbell</h3></div></article>
+            <article class="task-card"><div class="task-card__media"><video controls muted loop playsinline preload="metadata" data-autoplay aria-label="Barbell pickup reconstructed reference"><source src="videos/reconstruction/barbell.mp4" type="video/mp4"></video></div><div class="task-card__body"><h3>Pick Up the Barbell</h3></div></article>
+            <article class="task-card"><div class="task-card__media"><video controls muted loop playsinline preload="metadata" data-autoplay aria-label="Basket pickup reconstructed reference"><source src="videos/reconstruction/basket.mp4" type="video/mp4"></video></div><div class="task-card__body"><h3>Pick Up the Basket</h3></div></article>
+            <article class="task-card"><div class="task-card__media"><video controls muted loop playsinline preload="metadata" data-autoplay aria-label="Monitor pickup reconstructed reference"><source src="videos/reconstruction/monitor.mp4" type="video/mp4"></video></div><div class="task-card__body"><h3>Pick Up the Monitor</h3></div></article>
+            <article class="task-card"><div class="task-card__media"><video controls muted loop playsinline preload="metadata" data-autoplay aria-label="Basketball pickup reconstructed reference"><source src="videos/reconstruction/basketball.mp4" type="video/mp4"></video></div><div class="task-card__body"><h3>Pick Up the Basketball</h3></div></article>
+            <article class="task-card"><div class="task-card__media"><video controls muted loop playsinline preload="metadata" data-autoplay aria-label="Tennis ball pickup reconstructed reference"><source src="videos/reconstruction/tennisball.mp4" type="video/mp4"></video></div><div class="task-card__body"><h3>Pick Up the Tennis Ball</h3></div></article>
+            <article class="task-card"><div class="task-card__media"><video controls muted loop playsinline preload="metadata" data-autoplay aria-label="Chair pickup reconstructed reference"><source src="videos/reconstruction/chair_pickup.mp4" type="video/mp4"></video></div><div class="task-card__body"><h3>Pick Up the Chair</h3></div></article>
+            <article class="task-card"><div class="task-card__media"><video controls muted loop playsinline preload="metadata" data-autoplay aria-label="Chair sitting reconstructed reference"><source src="videos/reconstruction/chair_sitting.mp4" type="video/mp4"></video></div><div class="task-card__body"><h3>Sit on the Chair</h3></div></article>
+            <article class="task-card"><div class="task-card__media"><video controls muted loop playsinline preload="metadata" data-autoplay aria-label="Stool sitting reconstructed reference"><source src="videos/reconstruction/stool_sitting.mp4" type="video/mp4"></video></div><div class="task-card__body"><h3>Sit on the Stool</h3></div></article>
+            <article class="task-card"><div class="task-card__media"><video controls muted loop playsinline preload="metadata" data-autoplay aria-label="Floor mopping reconstructed reference"><source src="videos/reconstruction/mopping.mp4" type="video/mp4"></video></div><div class="task-card__body"><h3>Mop the Floor</h3></div></article>
+            <article class="task-card"><div class="task-card__media"><video controls muted loop playsinline preload="metadata" data-autoplay aria-label="Bottle placement reconstructed reference"><source src="videos/reconstruction/bottle2_table1.mp4" type="video/mp4"></video></div><div class="task-card__body"><h3>Place the Bottle on the Table</h3></div></article>
+            <article class="task-card"><div class="task-card__media"><video controls muted loop playsinline preload="metadata" data-autoplay aria-label="Box placement on a shelf reconstructed reference"><source src="videos/reconstruction/box_lifting_left.mp4" type="video/mp4"></video></div><div class="task-card__body"><h3>Place the Box on the Shelf</h3></div></article>
+          </div>
+        </section>
+
+        <section class="my-block deployment-block" id="deployment">
+          <div class="section-heading">
+            <h2 class="title is-3">Real-World Policy Deployment</h2>
+            <p>Tracking policies trained on KinoGen references execute diverse whole-body tasks on a Unitree G1 equipped with dexterous hands. Videos are shown at 1&times; speed. The deployments demonstrate that the generated references support hardware policy learning across whole-body lifting, placement, sitting, and environmental interaction.</p>
+          </div>
+          <div class="deployment-grid">
+            <article class="deployment-card"><div class="deployment-card__media"><video controls muted loop playsinline preload="metadata" data-autoplay aria-label="Real robot placing a flower on a table"><source src="videos/hardware/flower-upscaled.mp4" type="video/mp4"></video></div><h3>Place the Flower on the Table</h3></article>
+            <article class="deployment-card"><div class="deployment-card__media"><video controls muted loop playsinline preload="metadata" data-autoplay aria-label="Real robot picking up a basket"><source src="videos/hardware/basket-best.mp4" type="video/mp4"></video></div><h3>Pick Up the Basket</h3></article>
+            <article class="deployment-card"><div class="deployment-card__media"><video controls muted loop playsinline preload="metadata" data-autoplay aria-label="Real robot sitting on a stool"><source src="videos/hardware/stool.mp4" type="video/mp4"></video></div><h3>Sit on the Stool</h3></article>
+            <article class="deployment-card"><div class="deployment-card__media"><video controls muted loop playsinline preload="metadata" data-autoplay aria-label="Real robot picking up a chair from the left side"><source src="videos/hardware/chair-496-good-left.mp4" type="video/mp4"></video></div><h3>Pick Up the Chair — Left</h3></article>
+            <article class="deployment-card"><div class="deployment-card__media"><video controls muted loop playsinline preload="metadata" data-autoplay aria-label="Real robot picking up a chair from the right side"><source src="videos/hardware/chair-496-good-right.mp4" type="video/mp4"></video></div><h3>Pick Up the Chair — Right</h3></article>
+            <article class="deployment-card"><div class="deployment-card__media"><video controls muted loop playsinline preload="metadata" data-autoplay aria-label="Real robot picking up a tennis ball"><source src="videos/hardware/baseball-full.mp4"></video></div><h3>Pick Up the Tennis Ball</h3></article>
+            <article class="deployment-card"><div class="deployment-card__media"><video controls muted loop playsinline preload="metadata" data-autoplay aria-label="Real robot picking up a basketball"><source src="videos/hardware/basketball-full.mov"></video></div><h3>Pick Up the Basketball</h3></article>
+            <article class="deployment-card"><div class="deployment-card__media"><video controls muted loop playsinline preload="metadata" data-autoplay aria-label="Real robot mopping the floor"><source src="videos/hardware/mopping-upscaled-video.mp4" type="video/mp4"></video></div><h3>Mop the Floor</h3></article>
+            <article class="deployment-card"><div class="deployment-card__media"><video controls muted loop playsinline preload="metadata" data-autoplay aria-label="Real robot picking up a box and putting it down"><source src="videos/hardware/box.mp4" type="video/mp4"></video></div><h3>Pick Up the Box and Put It Down</h3></article>
+          </div>
+        </section>
+
+        <section class="my-block baseline-block" id="baselines">
+          <div class="section-heading">
+            <h2 class="title is-3">Comparison with Baselines</h2>
+            <p>All methods reconstruct the same generated interaction. KinoGen preserves a plausible grasp and ground contact, while the comparison methods exhibit penetration or floating artifacts. This yields a more physically coherent reference for downstream control.</p>
+          </div>
+          <div class="annotated-result-media">
+            <video controls muted loop playsinline preload="metadata" data-autoplay aria-label="Annotated reconstruction comparison across KinoGen and baseline methods">
+              <source src="videos/5-baseline.mp4" type="video/mp4">
+            </video>
+          </div>
+        </section>
+
+        <section class="my-block correction-block" id="correction">
+          <div class="section-heading">
+            <h2 class="title is-3">Reference Correction</h2>
+            <p>A user edits the desired bottle pose. KinoGen regenerates the surrounding motion and reconstructs it with the edited state as a hard constraint, using the video model as a behavior-aware interpolator. KinoGen reaches the prescribed targets exactly while producing substantially less penetration than direct interpolation.</p>
+          </div>
+          <div class="annotated-result-media">
+            <video controls muted loop playsinline preload="metadata" data-autoplay aria-label="Annotated comparison of KinoGen reference customization and correction baselines">
+              <source src="videos/6-customization.mp4" type="video/mp4">
+            </video>
+          </div>
+        </section>
+
+        <section class="my-block results-block" id="results">
+          <div class="section-heading">
+            <h2 class="title is-3">Quantitative Evaluation</h2>
+            <p>KinoGen achieves the best penetration, foot-skating, contact-preservation, and downstream RL performance among the video-based reference pipelines evaluated in the paper.</p>
+          </div>
+          <div class="evaluation-figures">
+            <figure class="evaluation-figure">
+              <img src="images/table1_quality.png" loading="lazy" alt="Bar charts comparing reconstruction quality across GenMimic, GenHOI, GRAIL, and KinoGen">
+              <figcaption>KinoGen has the lowest penetration (2.30 cm) and foot skating (4.09 cm/s), and the highest contact preservation (91.16%). GRAIL has the lowest root-acceleration value for smoothness. The quality gains suggest that KinoGen preserves the intended contacts throughout the interaction, including grasping and foot placement. This makes the recovered motion more consistent with the task’s geometry, beyond appearing plausible in individual frames.</figcaption>
+            </figure>
+            <figure class="evaluation-figure">
+              <img src="images/table1_downstream_rl_compact.png" loading="lazy" alt="Bar charts comparing downstream reinforcement-learning performance across GenMimic, GenHOI, GRAIL, and KinoGen">
+              <figcaption>Policies trained on KinoGen references achieve the highest success rate (57%), lowest reference deviation (0.09 m), and highest learning-curve AUC (60.74). References with less penetration and foot skating and better preserved contacts provide more consistent targets for policy learning. This helps the policy track the intended interaction with fewer conflicting motion demands.</figcaption>
+            </figure>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer site-footer">
+    <div class="page-shell"><div class="content has-text-centered"><p>This website was adapted from MOKA's <a href="https://moka-manipulation.github.io/" target="_blank" rel="noopener">source code</a>.</p></div></div>
+  </footer>
+</body>
+</html>
