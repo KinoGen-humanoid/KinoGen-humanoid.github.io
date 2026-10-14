@@ -3,6 +3,13 @@
 /figure-sources/
 
 # Unused website media
+/videos/baselines/DRE.mp4
+/videos/baselines/GenMimic.mp4
+/videos/baselines/GenHOI2.mp4
+/videos/baselines/GRAIL.mp4
+/videos/metric-constrained/\[left\]ours-b.mp4
+/videos/metric-constrained/\[mid\]original-b.mp4
+/videos/metric-constrained/\[right\]direct-b.mp4
 /images/method-gif.gif
 /images/method.png
 /images/table1_downstream_rl.png
@@ -11,10 +18,8 @@
 /images/teaser-horizontal.mp4
 /images/teaser.png
 /images/teaser_vert2-gif.mp4
-/videos/baselines/DRE.mp4
-/videos/baselines/GenHOI2.mp4
-/videos/baselines/GenMimic.mp4
-/videos/baselines/GRAIL.mp4
+/videos/5-baseline.mp4
+/videos/6-customization.mp4
 /videos/hardware/baseball-full.MOV
 /videos/metric-constrained/direct-b.mp4
 /videos/metric-constrained/direct.mp4

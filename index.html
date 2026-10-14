@@ -9,7 +9,7 @@
   <title>KinoGen: Customizable Humanoid Loco-Manipulation References via Kinematically Grounded Video Generation</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css?family=Google+Sans:400,500,700|Noto+Sans:400,500,600,700|Castoro" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./static/css/bulma.min.css">
   <link rel="stylesheet" href="./static/css/index.css">
   <script defer src="./static/js/fontawesome.all.min.js"></script>
@@ -24,17 +24,17 @@
           <span>via Kinematically Grounded Video Generation</span>
         </h1>
         <p class="conference-label">Anonymous ICRA Submission</p>
-        <div class="publication-links" aria-label="Project resources">
-          <a class="button is-normal is-rounded is-dark" href="full-paper.pdf" target="_blank" rel="noopener">
-            <span class="icon" aria-hidden="true"><i class="fas fa-file-pdf"></i></span><span>Paper</span>
+        <nav class="hero-links" aria-label="Project resources">
+          <a class="hero-link" href="full-paper.pdf" target="_blank" rel="noopener">
+            <i class="fas fa-file-pdf hero-link__icon" aria-hidden="true"></i><span>Paper</span>
           </a>
-          <a class="button is-normal is-rounded is-dark" href="#video">
-            <span class="icon" aria-hidden="true"><i class="fas fa-play"></i></span><span>Video</span>
+          <a class="hero-link" href="#video">
+            <i class="fas fa-play hero-link__icon" aria-hidden="true"></i><span>Video</span>
           </a>
-          <span class="button is-normal is-rounded resource-pending" aria-disabled="true">
-            <span class="icon" aria-hidden="true"><i class="fab fa-github"></i></span><span>Code coming soon</span>
+          <span class="hero-link is-pending" aria-disabled="true">
+            <i class="fab fa-github hero-link__icon" aria-hidden="true"></i><span>Code coming soon</span>
           </span>
-        </div>
+        </nav>
       </div>
     </div>
   </header>
@@ -42,16 +42,6 @@
   <main>
     <section class="section main-content">
       <div class="page-shell">
-        <section class="my-block video-block" id="video">
-          <figure class="video-feature">
-            <div class="video-feature__frame">
-              <video controls playsinline preload="metadata" aria-label="KinoGen project overview video">
-                <source src="videos/compressed-kinogen-vid-sub-v14.mp4" type="video/mp4">
-              </video>
-            </div>
-          </figure>
-        </section>
-
         <section class="my-block abstract-block" id="abstract">
           <div class="narrow-copy">
             <h2 class="title is-3 section-title--centered">Abstract</h2>
@@ -61,8 +51,8 @@
                 references through kinematically grounded video generation. KinoGen conditions a pretrained
                 video generator on calibrated renders of the target robot and object, then fits the same models
                 to the generated two-view video. The resulting reference lies in the robot configuration space
-                without a human body proxy or retargeting. Users can prescribe a goal object pose, regenerate
-                the motion around an edited keyframe, and recover a reference that satisfies that pose exactly.
+                without a human body proxy or retargeting. By correcting a single keyframe, KinoGen prescribes
+                a goal object pose, regenerates the surrounding motion, and recovers a reference that satisfies that pose exactly.
                 Across eight tasks, KinoGen reduces penetration and foot skating, preserves over 90% of annotated
                 contacts, and supports tracking-policy deployment on a Unitree G1 with dexterous hands.
               </p>
@@ -78,8 +68,10 @@
               </video>
             </div>
             <figcaption class="subtitle teaser-caption">
-              <strong>KinoGen</strong> turns synchronized robot videos into whole-body robot-object references
-              and supports keyframe-based correction for prescribed task goals.
+              <strong>KinoGen</strong> turns a task instance into a physically grounded motion reference for a target humanoid.
+              Calibrated renders of the robot, object, and scene condition a video generator to produce synchronized two-view videos,
+              and reconstruction recovers whole-body, hand, and object trajectories directly in the robot configuration space.
+              Correcting a single keyframe steers the reference to a prescribed goal exactly.
             </figcaption>
           </figure>
         </section>
@@ -88,17 +80,21 @@
           <div class="section-heading">
             <h2 class="title is-3">Method</h2>
             <p>
-              KinoGen synthesizes customizable whole-body, hand, and object motion references for a target humanoid and its scene.
-              Generated videos depict the desired interaction but do not directly provide the 3D trajectories required for tracking or guarantee a prescribed object pose.
-              KinoGen addresses these requirements by coupling video generation with simulator rendering and reconstruction through three key design choices:
+              Tracking policies for humanoid loco-manipulation require motion references that specify whole-body, hand, and object trajectories in the configuration space of the target robot.
+              Video generation offers a scalable source of such behavior. However, generated videos provide pixels rather than trajectories, and they give no guarantee that a prescribed object pose is reached.
+            </p>
+            <p>
+              Our key insight is that a video generator and a physics simulator can be coupled through rendering and reconstruction when both operate on the same robot and object models.
+              This coupling leads to three design choices:
             </p>
             <ul class="method-highlights">
-              <li>KinoGen uses the same robot and object models for generation and reconstruction, recovering complete references in the target configuration spaces without human-body reconstruction or retargeting.</li>
-              <li>KinoGen combines calibrated multi-view evidence with motion priors to reduce depth ambiguity and constrain motion that image matching alone cannot resolve.</li>
-              <li>KinoGen regenerates motion around edited simulator keyframes and enforces them during reconstruction, using generation to adapt the surrounding behavior while satisfying the prescribed poses exactly.</li>
+              <li><strong>Conditioning on the rendered initial state.</strong> Calibrated renders of the initial robot and object state condition the video generator, which places the generated behavior in the exact embodiment and scene. Fitting the same models to the generated video returns the behavior to the simulator. This yields references in the robot configuration space without a human body proxy or retargeting.</li>
+              <li><strong>Multi-view reconstruction with motion priors.</strong> Two synchronized views of the same interaction reduce depth ambiguity. Whole-body, hand, and object priors constrain the motion that image evidence alone cannot resolve.</li>
+              <li><strong>Keyframe-based correction.</strong> A corrected simulator keyframe prescribes the goal. The generator regenerates the surrounding motion, and reconstruction enforces the keyframe as a hard constraint. The reference reaches the prescribed configuration exactly while the motion stays coherent.</li>
             </ul>
           </div>
           <figure class="method-figure">
+            <div class="method-card">
             <div class="method-interactive">
               <video class="method-video" width="2160" height="532" muted loop playsinline preload="metadata" poster="images/method8-web-revised-poster.png" data-autoplay aria-label="Animated KinoGen method: grounded multi-view video generation, robot-object interaction reconstruction, and keyframe-based reference correction">
                 <source src="images/method8-web-revised.mp4" type="video/mp4">
@@ -107,8 +103,9 @@
               <div class="method-hotspots" aria-label="KinoGen method stages">
                 <button class="method-hotspot" type="button" aria-label="Explain video generation with kinematic grounding" aria-controls="method-stage-description" data-title="Grounded multi-view generation" data-description="conditions the video model on calibrated renders of the target robot, object, and scene. The two synchronized views describe the same interaction and reduce monocular depth ambiguity."></button>
                 <button class="method-hotspot" type="button" aria-label="Explain robot-object interaction reconstruction" aria-controls="method-stage-description" data-title="Robot-object reconstruction" data-description="fits the target models to multi-view evidence, with motion priors constraining the solution. This recovers body, hand, and object trajectories directly in the target configuration spaces without human body proxy or retargeting."></button>
-                <button class="method-hotspot" type="button" aria-label="Explain keyframe-based reference correction" aria-controls="method-stage-description" data-title="Keyframe-based correction" data-description="regenerates motion around an edited simulator keyframe and enforces that keyframe during reconstruction, so the reference satisfies the prescribed configuration exactly."></button>
+                <button class="method-hotspot" type="button" aria-label="Explain keyframe-based reference correction" aria-controls="method-stage-description" data-title="Keyframe-based correction" data-description="regenerates motion around a corrected simulator keyframe and enforces that keyframe during reconstruction, so the reference satisfies the prescribed configuration exactly."></button>
               </div>
+            </div>
             </div>
             <figcaption class="method-stage-description" id="method-stage-description" aria-live="polite">
               <strong hidden></strong>
@@ -125,7 +122,7 @@
           <div class="grounding-flow" aria-label="Generated interaction and corresponding reconstructed reference">
             <article class="flow-card">
               <div class="flow-card__video">
-                <video controls muted loop playsinline preload="metadata" data-autoplay aria-label="Generated two-view video of a robot placing a bottle on a table">
+                <video muted loop playsinline preload="metadata" data-autoplay aria-label="Generated two-view video of a robot placing a bottle on a table">
                   <source src="videos/generated/bottle2_table1.mp4" type="video/mp4">
                 </video>
               </div>
@@ -133,9 +130,9 @@
             </article>
             <article class="flow-card">
               <div class="flow-card__video">
-                <video controls muted loop playsinline preload="metadata" data-autoplay aria-label="Reconstructed robot-object reference for placing a bottle on a table"><source src="videos/reconstruction/bottle2_table1.mp4" type="video/mp4"></video>
+                <video muted loop playsinline preload="metadata" data-autoplay aria-label="Reconstructed robot-object reference for placing a bottle on a table"><source src="videos/reconstruction/bottle2_table1.mp4" type="video/mp4"></video>
               </div>
-              <div class="flow-card__body"><h3>Reconstructed robot–object reference</h3><p>KinoGen recovers the corresponding body, hand, and object trajectories in simulator coordinates.</p></div>
+              <div class="flow-card__body"><h3>Reconstructed robot–object reference</h3><p>KinoGen recovers the corresponding body, hand, and object trajectories.</p></div>
             </article>
           </div>
         </section>
@@ -146,18 +143,18 @@
             <p>Qualitative references at 1&times; speed span lifting, placement, sitting, and other environmental interaction. These examples show the diversity and quality of the generated motion references.</p>
           </div>
           <div class="task-grid">
-            <article class="task-card"><div class="task-card__media"><video controls muted loop playsinline preload="metadata" data-autoplay aria-label="Dumbbell pickup reconstructed reference"><source src="videos/reconstruction/dumbbell.mp4" type="video/mp4"></video></div><div class="task-card__body"><h3>Pick Up the Dumbbell</h3></div></article>
-            <article class="task-card"><div class="task-card__media"><video controls muted loop playsinline preload="metadata" data-autoplay aria-label="Barbell pickup reconstructed reference"><source src="videos/reconstruction/barbell.mp4" type="video/mp4"></video></div><div class="task-card__body"><h3>Pick Up the Barbell</h3></div></article>
-            <article class="task-card"><div class="task-card__media"><video controls muted loop playsinline preload="metadata" data-autoplay aria-label="Basket pickup reconstructed reference"><source src="videos/reconstruction/basket.mp4" type="video/mp4"></video></div><div class="task-card__body"><h3>Pick Up the Basket</h3></div></article>
-            <article class="task-card"><div class="task-card__media"><video controls muted loop playsinline preload="metadata" data-autoplay aria-label="Monitor pickup reconstructed reference"><source src="videos/reconstruction/monitor.mp4" type="video/mp4"></video></div><div class="task-card__body"><h3>Pick Up the Monitor</h3></div></article>
-            <article class="task-card"><div class="task-card__media"><video controls muted loop playsinline preload="metadata" data-autoplay aria-label="Basketball pickup reconstructed reference"><source src="videos/reconstruction/basketball.mp4" type="video/mp4"></video></div><div class="task-card__body"><h3>Pick Up the Basketball</h3></div></article>
-            <article class="task-card"><div class="task-card__media"><video controls muted loop playsinline preload="metadata" data-autoplay aria-label="Tennis ball pickup reconstructed reference"><source src="videos/reconstruction/tennisball.mp4" type="video/mp4"></video></div><div class="task-card__body"><h3>Pick Up the Tennis Ball</h3></div></article>
-            <article class="task-card"><div class="task-card__media"><video controls muted loop playsinline preload="metadata" data-autoplay aria-label="Chair pickup reconstructed reference"><source src="videos/reconstruction/chair_pickup.mp4" type="video/mp4"></video></div><div class="task-card__body"><h3>Pick Up the Chair</h3></div></article>
-            <article class="task-card"><div class="task-card__media"><video controls muted loop playsinline preload="metadata" data-autoplay aria-label="Chair sitting reconstructed reference"><source src="videos/reconstruction/chair_sitting.mp4" type="video/mp4"></video></div><div class="task-card__body"><h3>Sit on the Chair</h3></div></article>
-            <article class="task-card"><div class="task-card__media"><video controls muted loop playsinline preload="metadata" data-autoplay aria-label="Stool sitting reconstructed reference"><source src="videos/reconstruction/stool_sitting.mp4" type="video/mp4"></video></div><div class="task-card__body"><h3>Sit on the Stool</h3></div></article>
-            <article class="task-card"><div class="task-card__media"><video controls muted loop playsinline preload="metadata" data-autoplay aria-label="Floor mopping reconstructed reference"><source src="videos/reconstruction/mopping.mp4" type="video/mp4"></video></div><div class="task-card__body"><h3>Mop the Floor</h3></div></article>
-            <article class="task-card"><div class="task-card__media"><video controls muted loop playsinline preload="metadata" data-autoplay aria-label="Bottle placement reconstructed reference"><source src="videos/reconstruction/bottle2_table1.mp4" type="video/mp4"></video></div><div class="task-card__body"><h3>Place the Bottle on the Table</h3></div></article>
-            <article class="task-card"><div class="task-card__media"><video controls muted loop playsinline preload="metadata" data-autoplay aria-label="Box placement on a shelf reconstructed reference"><source src="videos/reconstruction/box_lifting_left.mp4" type="video/mp4"></video></div><div class="task-card__body"><h3>Place the Box on the Shelf</h3></div></article>
+            <article class="task-card"><div class="task-card__media"><video muted loop playsinline preload="metadata" data-autoplay aria-label="Dumbbell pickup reconstructed reference"><source src="videos/reconstruction/dumbbell.mp4" type="video/mp4"></video></div><div class="task-card__body"><h3>Pick Up the Dumbbell</h3></div></article>
+            <article class="task-card"><div class="task-card__media"><video muted loop playsinline preload="metadata" data-autoplay aria-label="Barbell pickup reconstructed reference"><source src="videos/reconstruction/barbell.mp4" type="video/mp4"></video></div><div class="task-card__body"><h3>Pick Up the Barbell</h3></div></article>
+            <article class="task-card"><div class="task-card__media"><video muted loop playsinline preload="metadata" data-autoplay aria-label="Basket pickup reconstructed reference"><source src="videos/reconstruction/basket.mp4" type="video/mp4"></video></div><div class="task-card__body"><h3>Pick Up the Basket</h3></div></article>
+            <article class="task-card"><div class="task-card__media"><video muted loop playsinline preload="metadata" data-autoplay aria-label="Monitor pickup reconstructed reference"><source src="videos/reconstruction/monitor.mp4" type="video/mp4"></video></div><div class="task-card__body"><h3>Pick Up the Monitor</h3></div></article>
+            <article class="task-card"><div class="task-card__media"><video muted loop playsinline preload="metadata" data-autoplay aria-label="Basketball pickup reconstructed reference"><source src="videos/reconstruction/basketball.mp4" type="video/mp4"></video></div><div class="task-card__body"><h3>Pick Up the Basketball</h3></div></article>
+            <article class="task-card"><div class="task-card__media"><video muted loop playsinline preload="metadata" data-autoplay aria-label="Tennis ball pickup reconstructed reference"><source src="videos/reconstruction/tennisball.mp4" type="video/mp4"></video></div><div class="task-card__body"><h3>Pick Up the Tennis Ball</h3></div></article>
+            <article class="task-card"><div class="task-card__media"><video muted loop playsinline preload="metadata" data-autoplay aria-label="Chair pickup reconstructed reference"><source src="videos/reconstruction/chair_pickup.mp4" type="video/mp4"></video></div><div class="task-card__body"><h3>Pick Up the Chair</h3></div></article>
+            <article class="task-card"><div class="task-card__media"><video muted loop playsinline preload="metadata" data-autoplay aria-label="Chair sitting reconstructed reference"><source src="videos/reconstruction/chair_sitting.mp4" type="video/mp4"></video></div><div class="task-card__body"><h3>Sit on the Chair</h3></div></article>
+            <article class="task-card"><div class="task-card__media"><video muted loop playsinline preload="metadata" data-autoplay aria-label="Stool sitting reconstructed reference"><source src="videos/reconstruction/stool_sitting.mp4" type="video/mp4"></video></div><div class="task-card__body"><h3>Sit on the Stool</h3></div></article>
+            <article class="task-card"><div class="task-card__media"><video muted loop playsinline preload="metadata" data-autoplay aria-label="Floor mopping reconstructed reference"><source src="videos/reconstruction/mopping.mp4" type="video/mp4"></video></div><div class="task-card__body"><h3>Mop the Floor</h3></div></article>
+            <article class="task-card"><div class="task-card__media"><video muted loop playsinline preload="metadata" data-autoplay aria-label="Bottle placement reconstructed reference"><source src="videos/reconstruction/bottle2_table1.mp4" type="video/mp4"></video></div><div class="task-card__body"><h3>Place the Bottle on the Table</h3></div></article>
+            <article class="task-card"><div class="task-card__media"><video muted loop playsinline preload="metadata" data-autoplay aria-label="Box placement on a shelf reconstructed reference"><source src="videos/reconstruction/box_lifting_left.mp4" type="video/mp4"></video></div><div class="task-card__body"><h3>Place the Box on the Shelf</h3></div></article>
           </div>
         </section>
 
@@ -167,15 +164,15 @@
             <p>Tracking policies trained on KinoGen references execute diverse whole-body tasks on a Unitree G1 equipped with dexterous hands. Videos are shown at 1&times; speed. The deployments demonstrate that the generated references support hardware policy learning across whole-body lifting, placement, sitting, and environmental interaction.</p>
           </div>
           <div class="deployment-grid">
-            <article class="deployment-card"><div class="deployment-card__media"><video controls muted loop playsinline preload="metadata" data-autoplay aria-label="Real robot placing a flower on a table"><source src="videos/hardware/flower-upscaled.mp4" type="video/mp4"></video></div><h3>Place the Flower on the Table</h3></article>
-            <article class="deployment-card"><div class="deployment-card__media"><video controls muted loop playsinline preload="metadata" data-autoplay aria-label="Real robot picking up a basket"><source src="videos/hardware/basket-best.mp4" type="video/mp4"></video></div><h3>Pick Up the Basket</h3></article>
-            <article class="deployment-card"><div class="deployment-card__media"><video controls muted loop playsinline preload="metadata" data-autoplay aria-label="Real robot sitting on a stool"><source src="videos/hardware/stool.mp4" type="video/mp4"></video></div><h3>Sit on the Stool</h3></article>
-            <article class="deployment-card"><div class="deployment-card__media"><video controls muted loop playsinline preload="metadata" data-autoplay aria-label="Real robot picking up a chair from the left side"><source src="videos/hardware/chair-496-good-left.mp4" type="video/mp4"></video></div><h3>Pick Up the Chair — Left</h3></article>
-            <article class="deployment-card"><div class="deployment-card__media"><video controls muted loop playsinline preload="metadata" data-autoplay aria-label="Real robot picking up a chair from the right side"><source src="videos/hardware/chair-496-good-right.mp4" type="video/mp4"></video></div><h3>Pick Up the Chair — Right</h3></article>
-            <article class="deployment-card"><div class="deployment-card__media"><video controls muted loop playsinline preload="metadata" data-autoplay aria-label="Real robot picking up a tennis ball"><source src="videos/hardware/baseball-full.mp4"></video></div><h3>Pick Up the Tennis Ball</h3></article>
-            <article class="deployment-card"><div class="deployment-card__media"><video controls muted loop playsinline preload="metadata" data-autoplay aria-label="Real robot picking up a basketball"><source src="videos/hardware/basketball-full.mov"></video></div><h3>Pick Up the Basketball</h3></article>
-            <article class="deployment-card"><div class="deployment-card__media"><video controls muted loop playsinline preload="metadata" data-autoplay aria-label="Real robot mopping the floor"><source src="videos/hardware/mopping-upscaled-video.mp4" type="video/mp4"></video></div><h3>Mop the Floor</h3></article>
-            <article class="deployment-card"><div class="deployment-card__media"><video controls muted loop playsinline preload="metadata" data-autoplay aria-label="Real robot picking up a box and putting it down"><source src="videos/hardware/box.mp4" type="video/mp4"></video></div><h3>Pick Up the Box and Put It Down</h3></article>
+            <article class="deployment-card"><div class="deployment-card__media" data-speed="1"><video muted loop playsinline preload="metadata" data-autoplay aria-label="Real robot placing a flower on a table"><source src="videos/hardware/flower-upscaled.mp4" type="video/mp4"></video></div><h3>Place the Flower on the Table</h3></article>
+            <article class="deployment-card"><div class="deployment-card__media" data-speed="1"><video muted loop playsinline preload="metadata" data-autoplay aria-label="Real robot picking up a basket"><source src="videos/hardware/basket-best.mp4" type="video/mp4"></video></div><h3>Pick Up the Basket</h3></article>
+            <article class="deployment-card"><div class="deployment-card__media" data-speed="1"><video muted loop playsinline preload="metadata" data-autoplay aria-label="Real robot sitting on a stool"><source src="videos/hardware/stool.mp4" type="video/mp4"></video></div><h3>Sit on the Stool</h3></article>
+            <article class="deployment-card"><div class="deployment-card__media" data-speed="1"><video muted loop playsinline preload="metadata" data-autoplay aria-label="Real robot picking up a chair from the left side"><source src="videos/hardware/chair-496-good-left.mp4" type="video/mp4"></video></div><h3>Pick Up the Chair — Left</h3></article>
+            <article class="deployment-card"><div class="deployment-card__media" data-speed="1"><video muted loop playsinline preload="metadata" data-autoplay aria-label="Real robot picking up a chair from the right side"><source src="videos/hardware/chair-496-good-right.mp4" type="video/mp4"></video></div><h3>Pick Up the Chair — Right</h3></article>
+            <article class="deployment-card"><div class="deployment-card__media" data-speed="1"><video muted loop playsinline preload="metadata" data-autoplay aria-label="Real robot picking up a tennis ball"><source src="videos/hardware/baseball-full.mp4"></video></div><h3>Pick Up the Tennis Ball</h3></article>
+            <article class="deployment-card"><div class="deployment-card__media" data-speed="1"><video muted loop playsinline preload="metadata" data-autoplay aria-label="Real robot picking up a basketball"><source src="videos/hardware/basketball-full.mov"></video></div><h3>Pick Up the Basketball</h3></article>
+            <article class="deployment-card"><div class="deployment-card__media" data-speed="1"><video muted loop playsinline preload="metadata" data-autoplay aria-label="Real robot mopping the floor"><source src="videos/hardware/mopping-upscaled-video.mp4" type="video/mp4"></video></div><h3>Mop the Floor</h3></article>
+            <article class="deployment-card"><div class="deployment-card__media" data-speed="1"><video muted loop playsinline preload="metadata" data-autoplay aria-label="Real robot picking up a box and putting it down"><source src="videos/hardware/box.mp4" type="video/mp4"></video></div><h3>Pick Up the Box and Put It Down</h3></article>
           </div>
         </section>
 
@@ -184,22 +181,41 @@
             <h2 class="title is-3">Comparison with Baselines</h2>
             <p>All methods reconstruct the same generated interaction. KinoGen preserves a plausible grasp and ground contact, while the comparison methods exhibit penetration or floating artifacts. This yields a more physically coherent reference for downstream control.</p>
           </div>
-          <div class="annotated-result-media">
-            <video controls muted loop playsinline preload="metadata" data-autoplay aria-label="Annotated reconstruction comparison across KinoGen and baseline methods">
-              <source src="videos/5-baseline.mp4" type="video/mp4">
-            </video>
+          <div class="synced-comparison" data-video-group aria-label="Baseline comparison videos">
+            <div class="comparison-panels comparison-panels--four">
+              <figure><figcaption>KinoGen (Ours)</figcaption><video controls muted playsinline preload="metadata" aria-label="KinoGen reconstruction"><source src="videos/baselines/kinogen-cropped.mp4" type="video/mp4"></video></figure>
+              <figure><figcaption>GenMimic</figcaption><video controls muted playsinline preload="metadata" aria-label="GenMimic reconstruction"><source src="videos/baselines/genmimic-cropped.mp4" type="video/mp4"></video></figure>
+              <figure><figcaption>GenHOI</figcaption><video controls muted playsinline preload="metadata" aria-label="GenHOI reconstruction"><source src="videos/baselines/genhoi-cropped.mp4" type="video/mp4"></video></figure>
+              <figure><figcaption>GRAIL</figcaption><video controls muted playsinline preload="metadata" aria-label="GRAIL reconstruction"><source src="videos/baselines/grail-cropped.mp4" type="video/mp4"></video></figure>
+            </div>
+            <div class="group-controls" hidden>
+              <button type="button" data-group-play disabled aria-label="Play baseline videos">Play all</button>
+              <input type="range" data-group-seek min="0" max="1000" step="1" value="0" disabled aria-label="Seek baseline videos">
+              <output data-group-time>0:00 / 0:00</output>
+              <button type="button" data-group-restart disabled aria-label="Restart baseline videos">Restart</button>
+            </div>
+            <p class="group-status" role="status" data-group-status></p>
           </div>
         </section>
 
         <section class="my-block correction-block" id="correction">
           <div class="section-heading">
             <h2 class="title is-3">Reference Correction</h2>
-            <p>A user edits the desired bottle pose. KinoGen regenerates the surrounding motion and reconstructs it with the edited state as a hard constraint, using the video model as a behavior-aware interpolator. KinoGen reaches the prescribed targets exactly while producing substantially less penetration than direct interpolation.</p>
+            <p>By correcting the keyframe that specifies the bottle pose, KinoGen regenerates the surrounding motion and reconstructs it with the corrected state as a hard constraint, using the video model as a behavior-aware interpolator. KinoGen reaches the prescribed targets exactly while producing substantially less penetration than direct interpolation.</p>
           </div>
-          <div class="annotated-result-media">
-            <video controls muted loop playsinline preload="metadata" data-autoplay aria-label="Annotated comparison of KinoGen reference customization and correction baselines">
-              <source src="videos/6-customization.mp4" type="video/mp4">
-            </video>
+          <div class="synced-comparison" data-video-group aria-label="Reference correction videos">
+            <div class="comparison-panels comparison-panels--three">
+              <figure><figcaption>KinoGen (Our full model)</figcaption><video controls muted playsinline preload="metadata" aria-label="KinoGen corrected reference"><source src="videos/metric-constrained/ours-cropped.mp4" type="video/mp4"></video></figure>
+              <figure><figcaption>Original reference</figcaption><video controls muted playsinline preload="metadata" aria-label="Original uncorrected reference"><source src="videos/metric-constrained/original-cropped.mp4" type="video/mp4"></video></figure>
+              <figure><figcaption>Direct interpolation</figcaption><video controls muted playsinline preload="metadata" aria-label="Direct interpolation correction"><source src="videos/metric-constrained/direct-cropped.mp4" type="video/mp4"></video></figure>
+            </div>
+            <div class="group-controls" hidden>
+              <button type="button" data-group-play disabled aria-label="Play reference correction videos">Play all</button>
+              <input type="range" data-group-seek min="0" max="1000" step="1" value="0" disabled aria-label="Seek reference correction videos">
+              <output data-group-time>0:00 / 0:00</output>
+              <button type="button" data-group-restart disabled aria-label="Restart reference correction videos">Restart</button>
+            </div>
+            <p class="group-status" role="status" data-group-status></p>
           </div>
         </section>
 
@@ -210,21 +226,30 @@
           </div>
           <div class="evaluation-figures">
             <figure class="evaluation-figure">
-              <img src="images/table1_quality.png" loading="lazy" alt="Bar charts comparing reconstruction quality across GenMimic, GenHOI, GRAIL, and KinoGen">
-              <figcaption>KinoGen has the lowest penetration (2.30 cm) and foot skating (4.09 cm/s), and the highest contact preservation (91.16%). GRAIL has the lowest root-acceleration value for smoothness. The quality gains suggest that KinoGen preserves the intended contacts throughout the interaction, including grasping and foot placement. This makes the recovered motion more consistent with the task’s geometry, beyond appearing plausible in individual frames.</figcaption>
+              <h3 class="chart__title">Reconstruction quality</h3>
+              <div class="chart__grid chart--four"><svg class="bc" viewBox="0 0 250 210" role="img" aria-label="Penetration (cm), lower is better: GenMimic 3.17, GenHOI 10.55, GRAIL 3.06, KinoGen 2.30"><text class="bc-title" x="142.0" y="13" text-anchor="middle">Penetration (cm) ↓</text><text class="bc-tick" x="35" y="183.5" text-anchor="end">0</text><line class="bc-grid" x1="40" x2="244" y1="142.5" y2="142.5"/><text class="bc-tick" x="35" y="146.0" text-anchor="end">3</text><line class="bc-grid" x1="40" x2="244" y1="105.0" y2="105.0"/><text class="bc-tick" x="35" y="108.5" text-anchor="end">6</text><line class="bc-grid" x1="40" x2="244" y1="67.5" y2="67.5"/><text class="bc-tick" x="35" y="71.0" text-anchor="end">9</text><line class="bc-grid" x1="40" x2="244" y1="30.0" y2="30.0"/><text class="bc-tick" x="35" y="33.5" text-anchor="end">12</text><rect class="bc-bar" x="49.7" y="140.4" width="31.6" height="39.6" fill="#2f5f28"><title>GenMimic: 3.17</title></rect><text class="bc-value" x="65.5" y="136.4" text-anchor="middle">3.17</text><text class="bc-label" x="65.5" y="194" text-anchor="middle">GenMimic</text><rect class="bc-bar" x="100.7" y="48.1" width="31.6" height="131.9" fill="#438236"><title>GenHOI: 10.55</title></rect><text class="bc-value" x="116.5" y="44.1" text-anchor="middle">10.55</text><text class="bc-label" x="116.5" y="194" text-anchor="middle">GenHOI</text><rect class="bc-bar" x="151.7" y="141.8" width="31.6" height="38.2" fill="#609b55"><title>GRAIL: 3.06</title></rect><text class="bc-value" x="167.5" y="137.8" text-anchor="middle">3.06</text><text class="bc-label" x="167.5" y="194" text-anchor="middle">GRAIL</text><rect class="bc-bar" x="202.7" y="151.2" width="31.6" height="28.8" fill="#f2d65b"><title>KinoGen: 2.30</title></rect><text class="bc-value" x="218.5" y="147.2" text-anchor="middle">2.30</text><text class="bc-label" x="218.5" y="194" text-anchor="middle">KinoGen</text><line class="bc-axis" x1="40" x2="244" y1="180" y2="180"/></svg><svg class="bc" viewBox="0 0 250 210" role="img" aria-label="Foot skating (cm/s), lower is better: GenMimic 9.95, GenHOI 6.52, GRAIL 5.11, KinoGen 4.09"><text class="bc-title" x="142.0" y="13" text-anchor="middle">Foot skating (cm/s) ↓</text><text class="bc-tick" x="35" y="183.5" text-anchor="end">0</text><line class="bc-grid" x1="40" x2="244" y1="142.5" y2="142.5"/><text class="bc-tick" x="35" y="146.0" text-anchor="end">3</text><line class="bc-grid" x1="40" x2="244" y1="105.0" y2="105.0"/><text class="bc-tick" x="35" y="108.5" text-anchor="end">6</text><line class="bc-grid" x1="40" x2="244" y1="67.5" y2="67.5"/><text class="bc-tick" x="35" y="71.0" text-anchor="end">9</text><line class="bc-grid" x1="40" x2="244" y1="30.0" y2="30.0"/><text class="bc-tick" x="35" y="33.5" text-anchor="end">12</text><rect class="bc-bar" x="49.7" y="55.6" width="31.6" height="124.4" fill="#2f5f28"><title>GenMimic: 9.95</title></rect><text class="bc-value" x="65.5" y="51.6" text-anchor="middle">9.95</text><text class="bc-label" x="65.5" y="194" text-anchor="middle">GenMimic</text><rect class="bc-bar" x="100.7" y="98.5" width="31.6" height="81.5" fill="#438236"><title>GenHOI: 6.52</title></rect><text class="bc-value" x="116.5" y="94.5" text-anchor="middle">6.52</text><text class="bc-label" x="116.5" y="194" text-anchor="middle">GenHOI</text><rect class="bc-bar" x="151.7" y="116.1" width="31.6" height="63.9" fill="#609b55"><title>GRAIL: 5.11</title></rect><text class="bc-value" x="167.5" y="112.1" text-anchor="middle">5.11</text><text class="bc-label" x="167.5" y="194" text-anchor="middle">GRAIL</text><rect class="bc-bar" x="202.7" y="128.9" width="31.6" height="51.1" fill="#f2d65b"><title>KinoGen: 4.09</title></rect><text class="bc-value" x="218.5" y="124.9" text-anchor="middle">4.09</text><text class="bc-label" x="218.5" y="194" text-anchor="middle">KinoGen</text><line class="bc-axis" x1="40" x2="244" y1="180" y2="180"/></svg><svg class="bc" viewBox="0 0 250 210" role="img" aria-label="Contact preservation (%), higher is better: GenMimic 13.57, GenHOI 43.91, GRAIL 69.40, KinoGen 91.16"><text class="bc-title" x="142.0" y="13" text-anchor="middle">Contact preservation (%) ↑</text><text class="bc-tick" x="35" y="183.5" text-anchor="end">0%</text><line class="bc-grid" x1="40" x2="244" y1="150.0" y2="150.0"/><text class="bc-tick" x="35" y="153.5" text-anchor="end">20%</text><line class="bc-grid" x1="40" x2="244" y1="120.0" y2="120.0"/><text class="bc-tick" x="35" y="123.5" text-anchor="end">40%</text><line class="bc-grid" x1="40" x2="244" y1="90.0" y2="90.0"/><text class="bc-tick" x="35" y="93.5" text-anchor="end">60%</text><line class="bc-grid" x1="40" x2="244" y1="60.0" y2="60.0"/><text class="bc-tick" x="35" y="63.5" text-anchor="end">80%</text><line class="bc-grid" x1="40" x2="244" y1="30.0" y2="30.0"/><text class="bc-tick" x="35" y="33.5" text-anchor="end">100%</text><rect class="bc-bar" x="49.7" y="159.6" width="31.6" height="20.4" fill="#2f5f28"><title>GenMimic: 13.57</title></rect><text class="bc-value" x="65.5" y="155.6" text-anchor="middle">13.57</text><text class="bc-label" x="65.5" y="194" text-anchor="middle">GenMimic</text><rect class="bc-bar" x="100.7" y="114.1" width="31.6" height="65.9" fill="#438236"><title>GenHOI: 43.91</title></rect><text class="bc-value" x="116.5" y="110.1" text-anchor="middle">43.91</text><text class="bc-label" x="116.5" y="194" text-anchor="middle">GenHOI</text><rect class="bc-bar" x="151.7" y="75.9" width="31.6" height="104.1" fill="#609b55"><title>GRAIL: 69.40</title></rect><text class="bc-value" x="167.5" y="71.9" text-anchor="middle">69.40</text><text class="bc-label" x="167.5" y="194" text-anchor="middle">GRAIL</text><rect class="bc-bar" x="202.7" y="43.3" width="31.6" height="136.7" fill="#f2d65b"><title>KinoGen: 91.16</title></rect><text class="bc-value" x="218.5" y="39.3" text-anchor="middle">91.16</text><text class="bc-label" x="218.5" y="194" text-anchor="middle">KinoGen</text><line class="bc-axis" x1="40" x2="244" y1="180" y2="180"/></svg><svg class="bc" viewBox="0 0 250 210" role="img" aria-label="Smoothness (m/s²), lower is better: GenMimic 0.96, GenHOI 1.34, GRAIL 0.59, KinoGen 0.73"><text class="bc-title" x="142.0" y="13" text-anchor="middle">Smoothness (m/s²) ↓</text><text class="bc-tick" x="35" y="183.5" text-anchor="end">0.0</text><line class="bc-grid" x1="40" x2="244" y1="130.0" y2="130.0"/><text class="bc-tick" x="35" y="133.5" text-anchor="end">0.5</text><line class="bc-grid" x1="40" x2="244" y1="80.0" y2="80.0"/><text class="bc-tick" x="35" y="83.5" text-anchor="end">1.0</text><line class="bc-grid" x1="40" x2="244" y1="30.0" y2="30.0"/><text class="bc-tick" x="35" y="33.5" text-anchor="end">1.5</text><rect class="bc-bar" x="49.7" y="84.0" width="31.6" height="96.0" fill="#2f5f28"><title>GenMimic: 0.96</title></rect><text class="bc-value" x="65.5" y="80.0" text-anchor="middle">0.96</text><text class="bc-label" x="65.5" y="194" text-anchor="middle">GenMimic</text><rect class="bc-bar" x="100.7" y="46.0" width="31.6" height="134.0" fill="#438236"><title>GenHOI: 1.34</title></rect><text class="bc-value" x="116.5" y="42.0" text-anchor="middle">1.34</text><text class="bc-label" x="116.5" y="194" text-anchor="middle">GenHOI</text><rect class="bc-bar" x="151.7" y="121.0" width="31.6" height="59.0" fill="#609b55"><title>GRAIL: 0.59</title></rect><text class="bc-value" x="167.5" y="117.0" text-anchor="middle">0.59</text><text class="bc-label" x="167.5" y="194" text-anchor="middle">GRAIL</text><rect class="bc-bar" x="202.7" y="107.0" width="31.6" height="73.0" fill="#f2d65b"><title>KinoGen: 0.73</title></rect><text class="bc-value" x="218.5" y="103.0" text-anchor="middle">0.73</text><text class="bc-label" x="218.5" y="194" text-anchor="middle">KinoGen</text><line class="bc-axis" x1="40" x2="244" y1="180" y2="180"/></svg></div>
+              <figcaption>KinoGen has the lowest penetration (2.30 cm) and foot skating (4.09 cm/s), and the highest contact preservation (91.16%). GRAIL has the lowest root-acceleration value for smoothness. The quality gains suggest that KinoGen preserves the intended contacts throughout the interaction, including grasping and foot placement. This makes the recovered motion consistent with the task geometry rather than merely plausible.</figcaption>
             </figure>
             <figure class="evaluation-figure">
-              <img src="images/table1_downstream_rl_compact.png" loading="lazy" alt="Bar charts comparing downstream reinforcement-learning performance across GenMimic, GenHOI, GRAIL, and KinoGen">
+              <h3 class="chart__title">Downstream RL performance</h3>
+              <div class="chart__grid chart--three"><svg class="bc" viewBox="0 0 250 210" role="img" aria-label="Success (%), higher is better: GenMimic 31, GenHOI 11, GRAIL 42, KinoGen 57"><text class="bc-title" x="142.0" y="13" text-anchor="middle">Success (%) ↑</text><text class="bc-tick" x="35" y="183.5" text-anchor="end">0%</text><line class="bc-grid" x1="40" x2="244" y1="130.0" y2="130.0"/><text class="bc-tick" x="35" y="133.5" text-anchor="end">20%</text><line class="bc-grid" x1="40" x2="244" y1="80.0" y2="80.0"/><text class="bc-tick" x="35" y="83.5" text-anchor="end">40%</text><line class="bc-grid" x1="40" x2="244" y1="30.0" y2="30.0"/><text class="bc-tick" x="35" y="33.5" text-anchor="end">60%</text><rect class="bc-bar" x="49.7" y="102.5" width="31.6" height="77.5" fill="#2f5f28"><title>GenMimic: 31</title></rect><text class="bc-value" x="65.5" y="98.5" text-anchor="middle">31</text><text class="bc-label" x="65.5" y="194" text-anchor="middle">GenMimic</text><rect class="bc-bar" x="100.7" y="152.5" width="31.6" height="27.5" fill="#438236"><title>GenHOI: 11</title></rect><text class="bc-value" x="116.5" y="148.5" text-anchor="middle">11</text><text class="bc-label" x="116.5" y="194" text-anchor="middle">GenHOI</text><rect class="bc-bar" x="151.7" y="75.0" width="31.6" height="105.0" fill="#609b55"><title>GRAIL: 42</title></rect><text class="bc-value" x="167.5" y="71.0" text-anchor="middle">42</text><text class="bc-label" x="167.5" y="194" text-anchor="middle">GRAIL</text><rect class="bc-bar" x="202.7" y="37.5" width="31.6" height="142.5" fill="#f2d65b"><title>KinoGen: 57</title></rect><text class="bc-value" x="218.5" y="33.5" text-anchor="middle">57</text><text class="bc-label" x="218.5" y="194" text-anchor="middle">KinoGen</text><line class="bc-axis" x1="40" x2="244" y1="180" y2="180"/></svg><svg class="bc" viewBox="0 0 250 210" role="img" aria-label="Reference deviation (m), lower is better: GenMimic 0.16, GenHOI 0.15, GRAIL 0.13, KinoGen 0.09"><text class="bc-title" x="142.0" y="13" text-anchor="middle">Reference deviation (m) ↓</text><text class="bc-tick" x="35" y="183.5" text-anchor="end">0.00</text><line class="bc-grid" x1="40" x2="244" y1="142.5" y2="142.5"/><text class="bc-tick" x="35" y="146.0" text-anchor="end">0.05</text><line class="bc-grid" x1="40" x2="244" y1="105.0" y2="105.0"/><text class="bc-tick" x="35" y="108.5" text-anchor="end">0.10</text><line class="bc-grid" x1="40" x2="244" y1="67.5" y2="67.5"/><text class="bc-tick" x="35" y="71.0" text-anchor="end">0.15</text><line class="bc-grid" x1="40" x2="244" y1="30.0" y2="30.0"/><text class="bc-tick" x="35" y="33.5" text-anchor="end">0.20</text><rect class="bc-bar" x="49.7" y="60.0" width="31.6" height="120.0" fill="#2f5f28"><title>GenMimic: 0.16</title></rect><text class="bc-value" x="65.5" y="56.0" text-anchor="middle">0.16</text><text class="bc-label" x="65.5" y="194" text-anchor="middle">GenMimic</text><rect class="bc-bar" x="100.7" y="67.5" width="31.6" height="112.5" fill="#438236"><title>GenHOI: 0.15</title></rect><text class="bc-value" x="116.5" y="63.5" text-anchor="middle">0.15</text><text class="bc-label" x="116.5" y="194" text-anchor="middle">GenHOI</text><rect class="bc-bar" x="151.7" y="82.5" width="31.6" height="97.5" fill="#609b55"><title>GRAIL: 0.13</title></rect><text class="bc-value" x="167.5" y="78.5" text-anchor="middle">0.13</text><text class="bc-label" x="167.5" y="194" text-anchor="middle">GRAIL</text><rect class="bc-bar" x="202.7" y="112.5" width="31.6" height="67.5" fill="#f2d65b"><title>KinoGen: 0.09</title></rect><text class="bc-value" x="218.5" y="108.5" text-anchor="middle">0.09</text><text class="bc-label" x="218.5" y="194" text-anchor="middle">KinoGen</text><line class="bc-axis" x1="40" x2="244" y1="180" y2="180"/></svg><svg class="bc" viewBox="0 0 250 210" role="img" aria-label="Learning curve AUC, higher is better: GenMimic 29.92, GenHOI 19.90, GRAIL 38.73, KinoGen 60.74"><text class="bc-title" x="142.0" y="13" text-anchor="middle">Learning curve AUC ↑</text><text class="bc-tick" x="35" y="183.5" text-anchor="end">0</text><line class="bc-grid" x1="40" x2="244" y1="142.5" y2="142.5"/><text class="bc-tick" x="35" y="146.0" text-anchor="end">20</text><line class="bc-grid" x1="40" x2="244" y1="105.0" y2="105.0"/><text class="bc-tick" x="35" y="108.5" text-anchor="end">40</text><line class="bc-grid" x1="40" x2="244" y1="67.5" y2="67.5"/><text class="bc-tick" x="35" y="71.0" text-anchor="end">60</text><line class="bc-grid" x1="40" x2="244" y1="30.0" y2="30.0"/><text class="bc-tick" x="35" y="33.5" text-anchor="end">80</text><rect class="bc-bar" x="49.7" y="123.9" width="31.6" height="56.1" fill="#2f5f28"><title>GenMimic: 29.92</title></rect><text class="bc-value" x="65.5" y="119.9" text-anchor="middle">29.92</text><text class="bc-label" x="65.5" y="194" text-anchor="middle">GenMimic</text><rect class="bc-bar" x="100.7" y="142.7" width="31.6" height="37.3" fill="#438236"><title>GenHOI: 19.90</title></rect><text class="bc-value" x="116.5" y="138.7" text-anchor="middle">19.90</text><text class="bc-label" x="116.5" y="194" text-anchor="middle">GenHOI</text><rect class="bc-bar" x="151.7" y="107.4" width="31.6" height="72.6" fill="#609b55"><title>GRAIL: 38.73</title></rect><text class="bc-value" x="167.5" y="103.4" text-anchor="middle">38.73</text><text class="bc-label" x="167.5" y="194" text-anchor="middle">GRAIL</text><rect class="bc-bar" x="202.7" y="66.1" width="31.6" height="113.9" fill="#f2d65b"><title>KinoGen: 60.74</title></rect><text class="bc-value" x="218.5" y="62.1" text-anchor="middle">60.74</text><text class="bc-label" x="218.5" y="194" text-anchor="middle">KinoGen</text><line class="bc-axis" x1="40" x2="244" y1="180" y2="180"/></svg></div>
               <figcaption>Policies trained on KinoGen references achieve the highest success rate (57%), lowest reference deviation (0.09 m), and highest learning-curve AUC (60.74). References with less penetration and foot skating and better preserved contacts provide more consistent targets for policy learning. This helps the policy track the intended interaction with fewer conflicting motion demands.</figcaption>
             </figure>
           </div>
         </section>
+
+        <section class="my-block video-block" id="video">
+          <h2 class="title is-3 section-title--centered">Video Summary</h2>
+          <figure class="video-feature">
+            <div class="video-feature__frame">
+              <video controls playsinline preload="metadata" aria-label="KinoGen project overview video">
+                <source src="videos/compressed-kinogen-vid-sub-v14.mp4" type="video/mp4">
+              </video>
+            </div>
+          </figure>
+        </section>
       </div>
     </section>
   </main>
-
-  <footer class="footer site-footer">
-    <div class="page-shell"><div class="content has-text-centered"><p>This website was adapted from MOKA's <a href="https://moka-manipulation.github.io/" target="_blank" rel="noopener">source code</a>.</p></div></div>
-  </footer>
 </body>
 </html>
