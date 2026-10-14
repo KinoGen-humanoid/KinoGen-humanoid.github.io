@@ -94,14 +94,56 @@ strong,
   display: block;
 }
 
-.conference-label {
-  margin: 0;
-  color: var(--muted);
-  font-family: var(--font);
-  font-size: 1.03rem;
-  font-weight: 400;
+.publication-authors {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.2rem 0.4rem;
+  max-width: 850px;
+  margin: 0 auto;
+  color: var(--ink);
+  font-family: Inter, sans-serif;
+  font-size: 1.15rem;
+  font-weight: 300;
   line-height: 1.65;
 }
+
+.publication-authors > span { white-space: nowrap; }
+.publication-authors a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 150ms ease;
+}
+.publication-authors a:hover,
+.publication-authors a:focus-visible { color: #b31b1b; text-decoration: none; }
+.publication-authors a:focus-visible { outline: 2px solid #b31b1b; outline-offset: 3px; }
+
+.publication-authors sup {
+  margin-left: 0.12em;
+  color: var(--muted);
+  font-size: 0.65em;
+}
+.publication-affiliations {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem 2rem;
+  margin-top: 1rem;
+}
+.affiliation {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 44px;
+}
+.affiliation sup { color: var(--muted); font: 0.75rem Inter, sans-serif; align-self: flex-start; }
+.affiliation img { display: block; object-fit: contain; mix-blend-mode: multiply; }
+.affiliation--cornell { color: #b31b1b; font: 1.4rem Georgia, serif; }
+.affiliation--cornell:hover { color: #b31b1b; }
+.affiliation--cornell img { width: 32px; height: 32px; }
+.affiliation--multiply img { width: 176px; height: auto; }
+.affiliation:focus-visible { outline: 2px solid #b31b1b; outline-offset: 4px; }
 
 .hero-links {
   display: flex;
@@ -1137,7 +1179,7 @@ caption {
   align-items: center;
   gap: 1.5rem;
   margin-top: 1rem;
-  padding: 0.4rem;
+  padding: 0.25rem 0.4rem;
   background: linear-gradient(180deg, #fff, #f8f8f7);
   border: 1px solid #fff;
   border-radius: 999px;
@@ -1147,8 +1189,8 @@ caption {
   flex: none;
   display: grid;
   place-items: center;
-  width: 44px;
-  height: 44px;
+  width: 36px;
+  height: 36px;
   padding: 0;
   border: 1px solid #444;
   border-radius: 50%;
@@ -1166,7 +1208,7 @@ caption {
 .group-controls input {
   flex: 1;
   min-width: 0;
-  height: 36px;
+  height: 30px;
   margin: 0;
   appearance: none;
   -webkit-appearance: none;
@@ -1181,9 +1223,9 @@ caption {
 .group-controls input::-webkit-slider-thumb {
   appearance: none;
   -webkit-appearance: none;
-  width: 30px;
-  height: 30px;
-  margin-top: -12px;
+  width: 24px;
+  height: 24px;
+  margin-top: -9px;
   border: 1px solid #ddd;
   border-radius: 50%;
   background: linear-gradient(180deg, #fff, #fafafa);
@@ -1192,8 +1234,8 @@ caption {
 .group-controls input::-moz-range-track { height: 6px; border-radius: 999px; background: #e3e3e3; }
 .group-controls input::-moz-range-progress { height: 6px; border-radius: 999px; background: #555; }
 .group-controls input::-moz-range-thumb {
-  width: 30px;
-  height: 30px;
+  width: 24px;
+  height: 24px;
   border: 1px solid #ddd;
   border-radius: 50%;
   background: linear-gradient(180deg, #fff, #fafafa);
@@ -1208,8 +1250,8 @@ caption {
   .comparison-panels--four { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .comparison-panels { gap: 0.65rem; }
   .comparison-panels figcaption { font-size: 0.8rem; min-height: 2.5em; }
-  .group-controls:not([hidden]) { gap: 0.65rem; padding: 0.35rem; }
-  .group-controls button { width: 36px; height: 36px; }
+  .group-controls:not([hidden]) { gap: 0.65rem; padding: 0.25rem 0.35rem; }
+  .group-controls button { width: 32px; height: 32px; }
   .group-controls output { font-size: 0.75rem; }
 }
 @media (max-width: 420px) {
